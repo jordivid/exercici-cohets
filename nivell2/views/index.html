@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ca">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Cohets</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./../styles/index.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="../controllers/bundle.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1 class="text-center pt-3">Fàbrica Orbital</h1>
+            <h4 class="text-center">Prem sobre el cohet que vulguis fabricar</h4>
+        </header>
+        <div class="container mb-2 d-flex flex-wrap justify-content-center">
+            <div id="rocket1" class="card rocket-card" data-toggle="modal" data-target="#propulsors">
+                <div class="card-header text-center">
+                    <strong>Cohet de Fira</strong>
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <img src="./../assets/rocket1.png" alt="Cohet">
+                </div> 
+                <div class="card-footer text-center">1 propulsor</div>
+            </div>
+            <div id="rocket2" class="card rocket-card" data-toggle="modal" data-target="#propulsors">
+                <div class="card-header text-center">
+                    <strong>Cohet de Becari</strong>
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <img src="./../assets/rocket2.png" alt="Cohet">
+                </div> 
+                <div class="card-footer text-center">2 propulsors</div>
+            </div>
+            <div id="rocket3" class="card rocket-card" data-toggle="modal" data-target="#propulsors">
+                <div class="card-header text-center">
+                    <strong>Cohet de Llarg Abast</strong>
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <img src="./../assets/rocket3.png" alt="Cohet">
+                </div> 
+                <div class="card-footer text-center">3 propulsors</div>
+            </div>
+            <div id="rocket4" class="card rocket-card" data-toggle="modal" data-target="#propulsors">
+                <div class="card-header text-center">
+                    <strong>Cohet Orbital</strong>
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <img src="./../assets/rocket4.png" alt="Cohet">
+                </div> 
+                <div class="card-footer text-center">4 propulsors</div>
+            </div>
+            <div id="rocket5" class="card rocket-card" data-toggle="modal" data-target="#propulsors">
+                <div class="card-header text-center">
+                    <strong>Fragata Sideral</strong>
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <img src="./../assets/rocket5.png" alt="Cohet">
+                </div> 
+                <div class="card-footer text-center">5 propulsors</div>
+            </div>
+            <div id="rocket6" class="card rocket-card" data-toggle="modal" data-target="#propulsors">
+                <div class="card-header text-center">
+                    <strong>Star Destroyer</strong>
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <img src="./../assets/rocket6.png" alt="Cohet">
+                </div> 
+                <div class="card-footer text-center">6 propulsors</div>
+            </div>
+        </div>
+        <div class="modal" id="propulsors">
+            <div class="modal-dialog">
+                <div class="modal-content d-flex justify-content-center">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Dades del cohet</h4>
+                        <button id="btCancelUp" type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body d-flex justify-content-center">
+                        <form>
+                            <div class="form-group">
+                                <label for="codi" class="font-weight-bold">Codi</label>
+                                <input id="codi" type="text" class="form-control form-control-sm">
+                                <div id="errcodi" class="invalid-feedback"></div>
+                            </div>
+                            <div id="propellers"></div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                    <button id="btCancel" type="button" class="btn btn-secondary" data-dismiss="modal">Cance·la</button>
+                    <button id="btOK" type="button" class="btn btn-primary">Fabricar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container d-flex justify-content-center">
+            <div id="contenidorTaula">
+                <h4 class="text-center p-3">Cohets fabricats</h4>
+                <table class="table table-responsive">
+                    <thead>
+                        <th></th>
+                        <th>Cohet</th>
+                        <th>P1</th>
+                        <th>P2</th>
+                        <th>P3</th>
+                        <th>P4</th>
+                        <th>P5</th>
+                        <th>P6</th>
+                    </thead>
+                    <tbody id="magatzem"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="container d-flex justify-content-center mt-3">
+            <button id="btCursa" type="button" class="btn btn-primary">A la cursa!</button>
+        </div>
+        <audio id="petard" src="./../assets/explosio.mp3"></audio>
+    </body>
+</html>

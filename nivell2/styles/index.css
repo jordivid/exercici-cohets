@@ -1,0 +1,34 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    background-color: lightgray;
+    background-image: url("./../assets/nebula.jpg");
+    background-repeat: repeat-y;
+    background-position: fixed;
+    background-size: cover;
+}
+
+h1, h4{
+    text-shadow: 2px 2px 2px white;
+}
+
+.rocket-card{
+    border: 1px solid white;
+    border-radius: 5px;
+    width: 140px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.rocket-card card-body img{
+    width: 100%;
+    height: auto
+}
+
+#contenidorTaula{
+    display: inline-block;
+    background-color: white;
+    border-radius: 5px;
+}

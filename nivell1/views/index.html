@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ca">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Cohets</title>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="./../styles/index.css" />
+        <!-- <script src="../controllers/controller.js"></script> -->
+        <script src="../controllers/bundle.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1 class="text-center pt-3">Exercici Cohets</h1>
+        </header>
+        <div class="container mb-2">
+            <button id="btCrear1">Crear cohet 1</button>
+            <button id="btCrear2">Crear cohet 2</button>
+        </div>
+        <div class="container mb-2">
+            <button id="btAccelerar1" disabled>Accelera cohet 1</button>
+            <button id="btAccelerar2" disabled>Accelera cohet 2</button>
+            <button id="btFrenar1" disabled>Frena cohet 1</button>
+            <button id="btFrenar2" disabled>Frena cohet 2</button>
+        </div>
+        <div class="container mb-2">
+            <button id="btInfo1" disabled>Informació cohet 1</button>
+            <button id="btInfo2" disabled>Informació cohet 2</button>
+            <button id="btInfo0" disabled>Informació tots els cohets</button>
+        </div>
+        <div id="content" class="container mt-2 mb-2"></div>
+
+
+    </body>
+</html>
