@@ -1,9 +1,9 @@
 const path = require('path'); 
 
 module.exports = { 
-    entry: './controllers/index.js', 
+    entry: './controllers/cursa.js', 
     output: { 
-      filename: 'bundle.js', 
+      filename: 'bundle2.js', 
       path: path.resolve(__dirname, 'controllers'), 
     }, 
 }; 

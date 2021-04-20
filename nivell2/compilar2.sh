@@ -1,6 +1,7 @@
 cd ./models
-tsc cohet.ts
+tsc -t ES2015 cohet.ts
+tsc -t ES2015 competicio.ts
 cd ./../controllers
-tsc cursa.ts
+tsc -t ES2015 cursa.ts
 cd ./..
-webpack
+webpack --config-name webpack2.config.js

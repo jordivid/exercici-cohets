@@ -21,6 +21,7 @@ export class Cohet {
     }
   }
 
+  // Verifica l'existència d'un cohet a l'array
   public static hasCohet(codi: string, cohets: Cohet[]): boolean {
     for (let cohet of cohets) {
       if (cohet.codi === codi) {
@@ -41,6 +42,7 @@ export class Cohet {
     return null;
   }
 
+  // Elimina un cohet
   public static eliminarCohet(codi: string, cohets: Cohet[]): void {
     for (let i: number = 0; i < cohets.length; i++) {
       if (cohets[i].codi === codi) {
@@ -48,13 +50,16 @@ export class Cohet {
         break;
       }
     }
+    this.serialitzar(cohets, "llista_cohets");
   }
 
-  public static serialitzar(cohets: Cohet[]): void {
-    sessionStorage.setItem("llista_cohets", JSON.stringify(cohets));
+  // Converteix l'array de cohets en string
+  public static serialitzar(cohets: Cohet[], to: string): void {
+    sessionStorage.setItem(to, JSON.stringify(cohets));
   }
 
-  public static deserialitzar(): Cohet[] {
+  // Restaura l'array de cohets
+  public static deserialitzar(from: string): Cohet[] {
     class myProp {
       _maxpower: number = 0;
     }
@@ -66,7 +71,7 @@ export class Cohet {
     }
 
     let cohets: Cohet[] = new Array();
-    let guardats: string | null = sessionStorage.getItem("llista_cohets");
+    let guardats: string | null = sessionStorage.getItem(from);
 
     if (typeof guardats === "string") {
       let rockets = JSON.parse(guardats);
@@ -83,6 +88,8 @@ export class Cohet {
 
     return cohets;
   }
+
+  // Getters
 
   public get codi(): string {
     return this._codi;
@@ -104,6 +111,8 @@ export class Cohet {
     return this._posY;
   }
 
+  // Setters
+
   public set curpower(power: number) {
     this._curpower = power;
   }
@@ -116,6 +125,7 @@ export class Cohet {
     this._posY = y;
   }
 
+  // Obtenció màxima potència d'un cohet
   public getMaxPower(): number {
     let maxpower: number = 0;
 
@@ -126,10 +136,12 @@ export class Cohet {
     return maxpower;
   }
 
+  // Obtenció imatge vinculada a cohet segons nº propulsors
   public getImage(): string {
     return `rocket${this.propulsors.length}.png`;
   }
 
+  // Generació codi HTML per la taula d'informació de cohets fabricats
   public getInfo(): string {
     let row: string = "";
     let count: number = 0;
@@ -162,6 +174,26 @@ export class Cohet {
     return row;
   }
 
+  // Generació codi HTML per la taula de classificació en cursa
+  public classified(posicio: number): string {
+    let row: string = "";
+
+    row += `
+      <tr>
+      <td class="text-center"><span class="d-flex justify-content-center align-items-center" style="font-size: 30px">${ posicio }</span></td>
+      <td id="img_${
+        this.codi
+      }" class="p-1 d-flex flex-column justify-content-center align-items-center">
+          <img src="./../assets/${this.getImage()}" alt="Cohet" width="80px" height="auto">
+          <span style="font-size: 10px">${this.codi}</span>
+      </td>
+      </tr>
+    `;
+
+    return row;
+  }
+
+  // Acceleració del cohet
   public accelerar(): boolean {
     const maxpower: number = this.getMaxPower();
     let curpower: number = this.curpower;
@@ -179,6 +211,7 @@ export class Cohet {
     return true;
   }
 
+  // Frenada del cohet
   public frenar(): boolean {
     let curpower: number = this.curpower;
 
@@ -199,6 +232,7 @@ export class Cohet {
     this.curpower = 0;
   }
 
+  // Posicionament del cohet a la graella de la cursa
   public codiCohet(): string {
     let codi: string = `
             <div id="${

@@ -1,45 +1,45 @@
-"use strict";
-exports.__esModule = true;
-var cohet_js_1 = require("../models/cohet.js");
-var cohets = new Array();
-window.addEventListener('load', function (event) {
-    var _a, _b, _c, _d, _e, _f;
-    var aCorrer = document.getElementById("btCursa");
-    var _loop_1 = function (i) {
+import { Cohet } from "../models/cohet.js";
+let cohets = new Array();
+// S'estableix els listeners per als elements interactius i es restaura l'arrat
+// de cohets en cas de tenir-los guardats a sessionStorage.
+window.addEventListener('load', (event) => {
+    var _a, _b, _c, _d, _e, _f, _g;
+    let aCorrer = document.getElementById("btCursa");
+    for (let i = 1; i < 7; i++) {
         (_a = document.getElementById("rocket" + i)) === null || _a === void 0 ? void 0 : _a.addEventListener("click", function () {
             omplirFormulari(i);
         });
-    };
-    for (var i = 1; i < 7; i++) {
-        _loop_1(i);
     }
-    (_b = document.getElementById("btOK")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", function () {
+    (_b = document.getElementById("btNuke")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", function () {
+        fulminarTot();
+    });
+    (_c = document.getElementById("btOK")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", function () {
         crearCohet();
     });
-    (_c = document.getElementById("btCancelUp")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", function () {
+    (_d = document.getElementById("btCancelUp")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", function () {
         netejarFormulari();
     });
-    (_d = document.getElementById("btCancel")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", function () {
+    (_e = document.getElementById("btCancel")) === null || _e === void 0 ? void 0 : _e.addEventListener("click", function () {
         netejarFormulari();
     });
-    (_e = document.getElementById("btCursa")) === null || _e === void 0 ? void 0 : _e.addEventListener("click", function () {
+    (_f = document.getElementById("btCursa")) === null || _f === void 0 ? void 0 : _f.addEventListener("click", function () {
         carregarCursa();
     });
-    cohets = cohet_js_1.Cohet.deserialitzar();
+    cohets = Cohet.deserialitzar("llista_cohets");
     if (cohets.length > 0) {
-        var magatzem = document.getElementById("magatzem");
-        var _loop_2 = function (cohet) {
+        let magatzem = document.getElementById("magatzem");
+        for (let cohet of cohets) {
             magatzem.insertAdjacentHTML("beforeend", cohet.getInfo());
-            (_f = document.getElementById("bt_" + cohet.codi)) === null || _f === void 0 ? void 0 : _f.addEventListener("click", function () {
-                var objecte = document.getElementById(cohet.codi);
-                var imatge = document.getElementById("img_" + cohet.codi);
-                var petard = document.getElementById("petard");
+            (_g = document.getElementById("bt_" + cohet.codi)) === null || _g === void 0 ? void 0 : _g.addEventListener("click", function () {
+                let objecte = document.getElementById(cohet.codi);
+                let imatge = document.getElementById("img_" + cohet.codi);
+                let petard = document.getElementById("petard");
                 imatge.innerHTML = '<img src="./../assets/explosio.gif" alt="Explosió" width="80px" height="50px">';
                 petard.play();
                 setTimeout(function () {
                     objecte.remove();
                 }, 1000);
-                cohet_js_1.Cohet.eliminarCohet(cohet.codi, cohets);
+                Cohet.eliminarCohet(cohet.codi, cohets);
                 if (cohets.length === 0) {
                     aCorrer.disabled = true;
                 }
@@ -47,49 +47,64 @@ window.addEventListener('load', function (event) {
                     aCorrer.disabled = false;
                 }
             });
-        };
-        for (var _i = 0, cohets_1 = cohets; _i < cohets_1.length; _i++) {
-            var cohet = cohets_1[_i];
-            _loop_2(cohet);
         }
     }
     else {
         aCorrer.disabled = true;
     }
 });
+// Es genera el formulari de fabricació de cohets
 function omplirFormulari(numPropulsors) {
-    var contingut = document.getElementById("propellers");
-    var propFields = "";
-    for (var i = 1; i <= numPropulsors; i++) {
-        propFields += "\n            <div style=\"width: 100px; margin: auto\" class=\"form-group mt-2\">\n                <label for=\"prop" + i + "\" class=\"font-weight-bold\">Propulsor" + i + "</label>\n                <select class=\"form-control form-control-sm\" id=\"prop" + i + "\">\n                    <option value=\"10\">10</option>\n                    <option value=\"20\">20</option>\n                    <option value=\"30\">30</option>\n                    <option value=\"40\">40</option>\n                    <option value=\"50\">50</option>\n                    <option value=\"60\">60</option>\n                </select>\n            </div>\n        ";
+    let contingut = document.getElementById("propellers");
+    let propFields = "";
+    for (let i = 1; i <= numPropulsors; i++) {
+        propFields += `
+            <div style="width: 100px; margin: auto" class="form-group mt-2">
+                <label for="prop${i}" class="font-weight-bold">Propulsor${i}</label>
+                <select class="form-control form-control-sm" id="prop${i}">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                    <option value="60">60</option>
+                </select>
+            </div>
+        `;
     }
     contingut.innerHTML = propFields;
 }
+// Creació d'un cohets. Es valida que el codi sigui únic, s'afegeix a taula i es crea
+// un listener per a la seva eventual eliminació.
 function crearCohet() {
     var _a;
-    var magatzem = document.getElementById("magatzem");
-    var aCorrer = document.getElementById("btCursa");
-    var codi = document.getElementById("codi");
-    var codiValue = codi.value.trim();
-    var prop1 = document.getElementById("prop1");
-    var prop2 = document.getElementById("prop2");
-    var prop3 = document.getElementById("prop3");
-    var prop4 = document.getElementById("prop4");
-    var prop5 = document.getElementById("prop5");
-    var prop6 = document.getElementById("prop6");
-    var propulsors = new Array();
-    var cohet;
+    let magatzem = document.getElementById("magatzem");
+    let aCorrer = document.getElementById("btCursa");
+    let voltes = document.getElementById("voltes");
+    let codi = document.getElementById("codi");
+    let codiValue = codi.value.trim();
+    let prop1 = document.getElementById("prop1");
+    let prop2 = document.getElementById("prop2");
+    let prop3 = document.getElementById("prop3");
+    let prop4 = document.getElementById("prop4");
+    let prop5 = document.getElementById("prop5");
+    let prop6 = document.getElementById("prop6");
+    let propulsors = new Array();
+    let cohet;
     // S'elimina els errors d'una validació prèvia
-    var errcodi = document.getElementById("errcodi");
+    let errcodi = document.getElementById("errcodi");
+    let errvoltes = document.getElementById("errvoltes");
     codi.classList.remove("is-invalid");
+    voltes.classList.remove("is-invalid");
     errcodi.innerHTML = "";
+    errvoltes.innerHTML = "";
     if (codiValue.length != 8) {
         codi.classList.add("is-invalid");
         errcodi.innerHTML = "El codi ha de tenir 8 caràcters";
         return;
     }
     // Es comprova que no existeixi un cohet amb el mateix codi
-    if (cohet_js_1.Cohet.hasCohet(codiValue, cohets)) {
+    if (Cohet.hasCohet(codiValue, cohets)) {
         codi.classList.add("is-invalid");
         errcodi.innerHTML = "Ja existeix un cohet amb aquest codi";
         return;
@@ -111,35 +126,37 @@ function crearCohet() {
     if (prop6 != null) {
         propulsors.push(Number(prop6.value));
     }
-    cohet = new cohet_js_1.Cohet(codiValue, propulsors);
+    cohet = new Cohet(codiValue, propulsors);
     cohets.push(cohet);
     magatzem.insertAdjacentHTML("beforeend", cohet.getInfo());
     aCorrer.disabled = false;
     (_a = document.getElementById("bt_" + cohet.codi)) === null || _a === void 0 ? void 0 : _a.addEventListener("click", function () {
-        var objecte = document.getElementById(cohet.codi);
-        var imatge = document.getElementById("img_" + cohet.codi);
-        var petard = document.getElementById("petard");
+        let objecte = document.getElementById(cohet.codi);
+        let imatge = document.getElementById("img_" + cohet.codi);
+        let petard = document.getElementById("petard");
         imatge.innerHTML = '<img src="./../assets/explosio.gif" alt="Explosió" width="80px" height="50px">';
         petard.play();
         setTimeout(function () {
             objecte.remove();
         }, 1000);
-        cohet_js_1.Cohet.eliminarCohet(cohet.codi, cohets);
+        Cohet.eliminarCohet(cohet.codi, cohets);
         if (cohets.length === 0) {
             aCorrer.disabled = true;
         }
     });
+    Cohet.serialitzar(cohets, "llista_cohets");
     netejarFormulari();
 }
+// Inicialització del formulari de fabricació de cohets.
 function netejarFormulari() {
-    var codi = document.getElementById("codi");
-    var prop1 = document.getElementById("prop1");
-    var prop2 = document.getElementById("prop2");
-    var prop3 = document.getElementById("prop3");
-    var prop4 = document.getElementById("prop4");
-    var prop5 = document.getElementById("prop5");
-    var prop6 = document.getElementById("prop6");
-    var errcodi = document.getElementById("errcodi");
+    let codi = document.getElementById("codi");
+    let prop1 = document.getElementById("prop1");
+    let prop2 = document.getElementById("prop2");
+    let prop3 = document.getElementById("prop3");
+    let prop4 = document.getElementById("prop4");
+    let prop5 = document.getElementById("prop5");
+    let prop6 = document.getElementById("prop6");
+    let errcodi = document.getElementById("errcodi");
     codi.classList.remove("is-invalid");
     errcodi.innerHTML = "";
     codi.value = "";
@@ -160,7 +177,43 @@ function netejarFormulari() {
         prop6.value = "10";
     }
 }
+// Es carrega la pantalla de la cursa de cohets, sempre que s'hagi indicat un nº de voltes.
 function carregarCursa() {
-    cohet_js_1.Cohet.serialitzar(cohets);
+    let voltes = document.getElementById("voltes");
+    let errvoltes = document.getElementById("errvoltes");
+    let numvoltes;
+    // S'elimina l'error d'una validació prèvia
+    voltes.classList.remove("is-invalid");
+    errvoltes.innerHTML = "";
+    numvoltes = Math.floor(Number(voltes.value));
+    if (!(numvoltes > 0) || numvoltes > 20) {
+        voltes.classList.add("is-invalid");
+        errvoltes.innerHTML = "Introduïr entre 1 i 20 voltes";
+        return;
+    }
+    sessionStorage.setItem("voltes_cursa", numvoltes.toString());
     window.open("./../views/cursa.html", "_self");
+}
+// S'elimina tots els cohets fabricats
+function fulminarTot() {
+    let magatzem = document.getElementById("magatzem");
+    let taula = document.getElementById("contenidorTaula");
+    let petard = document.getElementById("granpetard");
+    let contingut;
+    console.log(cohets.length);
+    if (cohets.length > 0) {
+        cohets = new Array();
+        sessionStorage.removeItem("llista_cohets");
+        magatzem.innerHTML = "";
+        contingut = taula.innerHTML;
+        taula.innerHTML = "<img src='./../assets/granexplosio.png' alt='Explosió' width='50%' height='auto' style='margin-left: 25%'>";
+        petard.play();
+        setTimeout(function () {
+            var _a;
+            taula.innerHTML = contingut;
+            (_a = document.getElementById("btNuke")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", function () {
+                fulminarTot();
+            });
+        }, 4000);
+    }
 }

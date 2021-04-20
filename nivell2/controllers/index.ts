@@ -2,6 +2,8 @@ import { Cohet } from "../models/cohet.js";
 
 let cohets: Cohet[] = new Array();
 
+// S'estableix els listeners per als elements interactius i es restaura l'arrat
+// de cohets en cas de tenir-los guardats a sessionStorage.
 window.addEventListener('load', (event) => {
     let aCorrer: HTMLInputElement = <HTMLInputElement>document.getElementById("btCursa");
 
@@ -10,6 +12,9 @@ window.addEventListener('load', (event) => {
             omplirFormulari(i);
         });
     }
+    document.getElementById("btNuke")?.addEventListener("click", function() {
+        fulminarTot();
+    });
     document.getElementById("btOK")?.addEventListener("click", function() {
         crearCohet();
     });
@@ -23,7 +28,7 @@ window.addEventListener('load', (event) => {
         carregarCursa();
     });
 
-    cohets = Cohet.deserialitzar();
+    cohets = Cohet.deserialitzar("llista_cohets");
     if (cohets.length > 0) {
         let magatzem: HTMLElement = <HTMLElement>document.getElementById("magatzem");
         for (let cohet of cohets) {
@@ -52,6 +57,7 @@ window.addEventListener('load', (event) => {
     }
 });
 
+// Es genera el formulari de fabricació de cohets
 function omplirFormulari(numPropulsors: number) : void {
     let contingut: HTMLElement = (<HTMLElement>document.getElementById("propellers"));
     let propFields: string = "";
@@ -75,9 +81,12 @@ function omplirFormulari(numPropulsors: number) : void {
     contingut.innerHTML = propFields;
 }
 
+// Creació d'un cohets. Es valida que el codi sigui únic, s'afegeix a taula i es crea
+// un listener per a la seva eventual eliminació.
 function crearCohet() : void {
     let magatzem: HTMLElement = <HTMLElement>document.getElementById("magatzem");
     let aCorrer: HTMLInputElement = <HTMLInputElement>document.getElementById("btCursa");
+    let voltes: HTMLInputElement = <HTMLInputElement>document.getElementById("voltes");
     let codi: HTMLInputElement = <HTMLInputElement>document.getElementById("codi");
     let codiValue = codi.value.trim();
     let prop1: HTMLInputElement = <HTMLInputElement>document.getElementById("prop1");
@@ -91,8 +100,12 @@ function crearCohet() : void {
 
     // S'elimina els errors d'una validació prèvia
     let errcodi: HTMLElement = <HTMLElement>document.getElementById("errcodi");
+    let errvoltes: HTMLElement = <HTMLElement>document.getElementById("errvoltes");
+
     codi.classList.remove("is-invalid");
+    voltes.classList.remove("is-invalid");
     errcodi.innerHTML = "";
+    errvoltes.innerHTML = "";
 
     if (codiValue.length != 8) {
         codi.classList.add("is-invalid");
@@ -145,9 +158,11 @@ function crearCohet() : void {
         }
     });
 
+    Cohet.serialitzar(cohets, "llista_cohets");
     netejarFormulari();
 }
 
+// Inicialització del formulari de fabricació de cohets.
 function netejarFormulari() {
     let codi: HTMLInputElement = <HTMLInputElement>document.getElementById("codi");
     let prop1: HTMLInputElement = <HTMLInputElement>document.getElementById("prop1");
@@ -180,7 +195,48 @@ function netejarFormulari() {
     }
 }
 
+// Es carrega la pantalla de la cursa de cohets, sempre que s'hagi indicat un nº de voltes.
 function carregarCursa() {
-    Cohet.serialitzar(cohets);
+    let voltes: HTMLInputElement = <HTMLInputElement>document.getElementById("voltes");
+    let errvoltes: HTMLElement = <HTMLElement>document.getElementById("errvoltes");
+    let numvoltes: number;
+
+    // S'elimina l'error d'una validació prèvia
+    voltes.classList.remove("is-invalid");
+    errvoltes.innerHTML = "";
+
+    numvoltes = Math.floor(Number(voltes.value));
+    if (!(numvoltes > 0) || numvoltes > 20) {
+        voltes.classList.add("is-invalid");
+        errvoltes.innerHTML = "Introduïr entre 1 i 20 voltes";
+        return;
+    }
+
+    sessionStorage.setItem("voltes_cursa", numvoltes.toString());
     window.open("./../views/cursa.html", "_self");
+}
+
+// S'elimina tots els cohets fabricats
+function fulminarTot() {
+    let magatzem: HTMLElement = <HTMLElement>document.getElementById("magatzem");
+    let taula: HTMLElement = <HTMLElement>document.getElementById("contenidorTaula");
+    let petard: HTMLAudioElement = <HTMLAudioElement>document.getElementById("granpetard");
+    let contingut: string;
+
+    console.log(cohets.length);
+    if (cohets.length > 0) {
+        cohets = new Array();
+        sessionStorage.removeItem("llista_cohets");
+        magatzem.innerHTML = "";
+        contingut = taula.innerHTML;
+        taula.innerHTML = "<img src='./../assets/granexplosio.png' alt='Explosió' width='50%' height='auto' style='margin-left: 25%'>";
+        petard.play();
+        setTimeout(function(){
+            taula.innerHTML = contingut;
+            document.getElementById("btNuke")?.addEventListener("click", function() {
+                fulminarTot();
+            });
+        }, 4000);
+    }
+
 }

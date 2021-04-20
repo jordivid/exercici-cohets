@@ -1,155 +1,157 @@
-"use strict";
-exports.__esModule = true;
-exports.Cohet = void 0;
-var propulsor_1 = require("./propulsor");
-var Cohet = /** @class */ (function () {
-    function Cohet(codi, props) {
+import { Propulsor } from "./propulsor";
+export class Cohet {
+    constructor(codi, props) {
         this._codi = codi;
         this._propulsors = new Array();
         this._curpower = 0;
         this._posX = 0;
         this._posY = 0;
-        for (var _i = 0, props_1 = props; _i < props_1.length; _i++) {
-            var propulsor = props_1[_i];
-            this._propulsors.push(new propulsor_1.Propulsor(propulsor));
+        for (let propulsor of props) {
+            this._propulsors.push(new Propulsor(propulsor));
         }
     }
-    Cohet.hasCohet = function (codi, cohets) {
-        for (var _i = 0, cohets_1 = cohets; _i < cohets_1.length; _i++) {
-            var cohet = cohets_1[_i];
+    // Verifica l'existència d'un cohet a l'array
+    static hasCohet(codi, cohets) {
+        for (let cohet of cohets) {
             if (cohet.codi === codi) {
                 return true;
             }
         }
         return false;
-    };
-    Cohet.getCohet = function (codi, cohets) {
-        for (var _i = 0, cohets_2 = cohets; _i < cohets_2.length; _i++) {
-            var cohet = cohets_2[_i];
+    }
+    static getCohet(codi, cohets) {
+        for (let cohet of cohets) {
             if (cohet.codi === codi) {
                 return cohet;
             }
         }
         return null;
-    };
-    Cohet.eliminarCohet = function (codi, cohets) {
-        for (var i = 0; i < cohets.length; i++) {
+    }
+    // Elimina un cohet
+    static eliminarCohet(codi, cohets) {
+        for (let i = 0; i < cohets.length; i++) {
             if (cohets[i].codi === codi) {
                 cohets.splice(i, 1);
                 break;
             }
         }
-    };
-    Cohet.serialitzar = function (cohets) {
-        sessionStorage.setItem("llista_cohets", JSON.stringify(cohets));
-    };
-    Cohet.deserialitzar = function () {
-        var myProp = /** @class */ (function () {
-            function myProp() {
+        this.serialitzar(cohets, "llista_cohets");
+    }
+    // Converteix l'array de cohets en string
+    static serialitzar(cohets, to) {
+        sessionStorage.setItem(to, JSON.stringify(cohets));
+    }
+    // Restaura l'array de cohets
+    static deserialitzar(from) {
+        class myProp {
+            constructor() {
                 this._maxpower = 0;
             }
-            return myProp;
-        }());
-        var myRocket = /** @class */ (function () {
-            function myRocket() {
+        }
+        class myRocket {
+            constructor() {
                 this._codi = "";
                 this._curpower = 0;
                 this._propulsors = new Array();
             }
-            return myRocket;
-        }());
-        var cohets = new Array();
-        var guardats = sessionStorage.getItem("llista_cohets");
+        }
+        let cohets = new Array();
+        let guardats = sessionStorage.getItem(from);
         if (typeof guardats === "string") {
-            var rockets = JSON.parse(guardats);
-            var rocket = void 0;
-            for (var _i = 0, rockets_1 = rockets; _i < rockets_1.length; _i++) {
-                rocket = rockets_1[_i];
-                var props = new Array();
-                for (var _a = 0, _b = rocket._propulsors; _a < _b.length; _a++) {
-                    var prop = _b[_a];
+            let rockets = JSON.parse(guardats);
+            let rocket;
+            for (rocket of rockets) {
+                let props = new Array();
+                for (let prop of rocket._propulsors) {
                     props.push(prop._maxpower);
                 }
                 cohets.push(new Cohet(rocket._codi, props));
             }
         }
         return cohets;
-    };
-    Object.defineProperty(Cohet.prototype, "codi", {
-        get: function () {
-            return this._codi;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Cohet.prototype, "propulsors", {
-        get: function () {
-            return this._propulsors;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Cohet.prototype, "curpower", {
-        get: function () {
-            return this._curpower;
-        },
-        set: function (power) {
-            this._curpower = power;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Cohet.prototype, "posX", {
-        get: function () {
-            return this._posX;
-        },
-        set: function (x) {
-            this._posX = x;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Cohet.prototype, "posY", {
-        get: function () {
-            return this._posY;
-        },
-        set: function (y) {
-            this._posY = y;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Cohet.prototype.getMaxPower = function () {
-        var maxpower = 0;
-        for (var _i = 0, _a = this.propulsors; _i < _a.length; _i++) {
-            var propulsor = _a[_i];
+    }
+    // Getters
+    get codi() {
+        return this._codi;
+    }
+    get propulsors() {
+        return this._propulsors;
+    }
+    get curpower() {
+        return this._curpower;
+    }
+    get posX() {
+        return this._posX;
+    }
+    get posY() {
+        return this._posY;
+    }
+    // Setters
+    set curpower(power) {
+        this._curpower = power;
+    }
+    set posX(x) {
+        this._posX = x;
+    }
+    set posY(y) {
+        this._posY = y;
+    }
+    // Obtenció màxima potència d'un cohet
+    getMaxPower() {
+        let maxpower = 0;
+        for (let propulsor of this.propulsors) {
             maxpower += propulsor.maxpower;
         }
         return maxpower;
-    };
-    Cohet.prototype.getImage = function () {
-        return "rocket" + this.propulsors.length + ".png";
-    };
-    Cohet.prototype.getInfo = function () {
-        var row = "";
-        var count = 0;
-        row += "\n            <tr id=\"" + this.codi + "\">\n            <td><button id=\"bt_" + this.codi + "\" type=\"button\" class=\"btn btn-sm btn-danger\">X</button></td>\n            <td id=\"img_" + this.codi + "\" class=\"p-1 d-flex flex-column align-items-center\">\n                <img src=\"./../assets/" + this.getImage() + "\" alt=\"Cohet\" width=\"80px\" height=\"auto\">\n                <span style=\"font-size: 10px\">" + this.codi + "</span>\n            </td>\n        ";
-        for (var _i = 0, _a = this.propulsors; _i < _a.length; _i++) {
-            var propulsor = _a[_i];
+    }
+    // Obtenció imatge vinculada a cohet segons nº propulsors
+    getImage() {
+        return `rocket${this.propulsors.length}.png`;
+    }
+    // Generació codi HTML per la taula d'informació de cohets fabricats
+    getInfo() {
+        let row = "";
+        let count = 0;
+        row += `
+            <tr id="${this.codi}">
+            <td><button id="bt_${this.codi}" type="button" class="btn btn-sm btn-danger">X</button></td>
+            <td id="img_${this.codi}" class="p-1 d-flex flex-column align-items-center">
+                <img src="./../assets/${this.getImage()}" alt="Cohet" width="80px" height="auto">
+                <span style="font-size: 10px">${this.codi}</span>
+            </td>
+        `;
+        for (let propulsor of this.propulsors) {
             count++;
-            row += "\n                <td class=\"text-center\">" + propulsor.maxpower + "</td>\n            ";
+            row += `
+                <td class="text-center">${propulsor.maxpower}</td>
+            `;
         }
         if (count < 6) {
-            for (var i = count; i < 6; i++) {
+            for (let i = count; i < 6; i++) {
                 row += "<td></td>";
             }
         }
         row += "</tr>";
         return row;
-    };
-    Cohet.prototype.accelerar = function () {
-        var maxpower = this.getMaxPower();
-        var curpower = this.curpower;
+    }
+    // Generació codi HTML per la taula de classificació en cursa
+    classified(posicio) {
+        let row = "";
+        row += `
+      <tr>
+      <td class="text-center"><span class="d-flex justify-content-center align-items-center" style="font-size: 30px">${posicio}</span></td>
+      <td id="img_${this.codi}" class="p-1 d-flex flex-column justify-content-center align-items-center">
+          <img src="./../assets/${this.getImage()}" alt="Cohet" width="80px" height="auto">
+          <span style="font-size: 10px">${this.codi}</span>
+      </td>
+      </tr>
+    `;
+        return row;
+    }
+    // Acceleració del cohet
+    accelerar() {
+        const maxpower = this.getMaxPower();
+        let curpower = this.curpower;
         if (curpower === maxpower) {
             return false;
         }
@@ -159,9 +161,10 @@ var Cohet = /** @class */ (function () {
         }
         this.curpower = curpower;
         return true;
-    };
-    Cohet.prototype.frenar = function () {
-        var curpower = this.curpower;
+    }
+    // Frenada del cohet
+    frenar() {
+        let curpower = this.curpower;
         if (curpower === 0) {
             return false;
         }
@@ -171,16 +174,19 @@ var Cohet = /** @class */ (function () {
         }
         this.curpower = curpower;
         return true;
-    };
-    Cohet.prototype.aturar = function () {
+    }
+    aturar() {
         this.curpower = 0;
-    };
-    Cohet.prototype.codiCohet = function () {
-        var codi = "\n            <div id=\"" + this.codi + "\" style=\"display: inline-block; z-index: 100; position: absolute; top: -100px; left: -100px\">\n                <img src=\"./../assets/" + this.getImage() + "\" alt=\"" + this.codi + "\">\n            </div>\n        ";
+    }
+    // Posicionament del cohet a la graella de la cursa
+    codiCohet() {
+        let codi = `
+            <div id="${this.codi}" style="display: inline-block; z-index: 100; position: absolute; top: -100px; left: -100px">
+                <img src="./../assets/${this.getImage()}" alt="${this.codi}">
+            </div>
+        `;
         return codi;
-    };
-    Cohet.ACC_FACTOR = 10; // Factor d'acceleració
-    Cohet.DEC_FACTOR = 10; // Factor de frenada
-    return Cohet;
-}());
-exports.Cohet = Cohet;
+    }
+}
+Cohet.ACC_FACTOR = 10; // Factor d'acceleració
+Cohet.DEC_FACTOR = 10; // Factor de frenada

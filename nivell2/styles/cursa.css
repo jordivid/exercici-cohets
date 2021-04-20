@@ -2,10 +2,6 @@
     box-sizing: border-box;
 }
 
-html, body{
-    overflow-x: hidden;
-}
-
 body{
     background-color: lightgray;
     background-image: url("./../assets/nebula.jpg");
@@ -14,12 +10,14 @@ body{
     background-size: cover;
 }
 
+/* Àrea de la cursa */
 #raceArea{
     height: 100vh;
     width: 100vw;
     overflow: hidden;
 }
 
+/* Animació de les roques */
 @keyframes anim-roca1{
     0%{
         top: calc(100% - 80px);
@@ -78,6 +76,7 @@ body{
     animation-timing-function: linear;
     animation-iteration-count: infinite;
 }
+/* *** */
 
 #deathstar{
     position: absolute;
@@ -90,8 +89,4 @@ body{
     position: fixed;
     left: 0px;
     bottom: 0px;
-}
-
-#voltes{
-    width: 60px;
 }

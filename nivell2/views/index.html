@@ -102,7 +102,11 @@
                 <h4 class="text-center p-3">Cohets fabricats</h4>
                 <table class="table table-responsive">
                     <thead>
-                        <th></th>
+                        <th>
+                            <button id="btNuke" class="bg-danger">
+                                <img src="./../assets/atomic.png" alt="Explosió atòmica">
+                            </button>
+                        </th>
                         <th>Cohet</th>
                         <th>P1</th>
                         <th>P2</th>
@@ -111,13 +115,22 @@
                         <th>P5</th>
                         <th>P6</th>
                     </thead>
-                    <tbody id="magatzem"></tbody>
+                    <tbody id="magatzem">
+                    </tbody>
                 </table>
             </div>
         </div>
+        <h4 class="text-center mt-4">Vols veure els cohets en acció?</h4>
         <div class="container d-flex justify-content-center mt-3">
-            <button id="btCursa" type="button" class="btn btn-primary">A la cursa!</button>
+            <div>
+                <input id="voltes" type="number" class="form-control mr-2" placeholder="Nº de voltes">
+                <div id="errvoltes" class="invalid-feedback"></div>
+            </div>
+            <div>
+                <button id="btCursa" type="button" class="btn btn-primary">A la cursa!</button>
+            </div>
         </div>
         <audio id="petard" src="./../assets/explosio.mp3"></audio>
+        <audio id="granpetard" src="./../assets/explobig.mp3"></audio>
     </body>
 </html>
